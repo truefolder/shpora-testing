@@ -1,7 +1,9 @@
-﻿using NUnit.Framework;
+﻿using FluentAssertions;
+using NUnit.Framework;
 using NUnit.Framework.Legacy;
 
 namespace HomeExercise.Tasks.ObjectComparison;
+
 public class ObjectComparison
 {
     [Test]
@@ -15,15 +17,15 @@ public class ObjectComparison
             new Person("Vasili III of Russia", 28, 170, 60, null));
 
         // Перепишите код на использование Fluent Assertions.
-        ClassicAssert.AreEqual(actualTsar.Name, expectedTsar.Name);
-        ClassicAssert.AreEqual(actualTsar.Age, expectedTsar.Age);
-        ClassicAssert.AreEqual(actualTsar.Height, expectedTsar.Height);
-        ClassicAssert.AreEqual(actualTsar.Weight, expectedTsar.Weight);
+        actualTsar.Name.Should().Be(expectedTsar.Name);
+        actualTsar.Age.Should().Be(expectedTsar.Age);
+        actualTsar.Height.Should().Be(expectedTsar.Height);
+        actualTsar.Weight.Should().Be(expectedTsar.Weight);
 
-        ClassicAssert.AreEqual(expectedTsar.Parent!.Name, actualTsar.Parent!.Name);
-        ClassicAssert.AreEqual(expectedTsar.Parent.Age, actualTsar.Parent.Age);
-        ClassicAssert.AreEqual(expectedTsar.Parent.Height, actualTsar.Parent.Height);
-        ClassicAssert.AreEqual(expectedTsar.Parent.Parent, actualTsar.Parent.Parent);
+        expectedTsar.Parent!.Name.Should().Be(actualTsar.Parent!.Name);
+        expectedTsar.Parent.Age.Should().Be(actualTsar.Parent.Age);
+        expectedTsar.Parent.Height.Should().Be(actualTsar.Parent.Height);
+        expectedTsar.Parent.Parent.Should().Be(actualTsar.Parent.Parent);
     }
 
     [Test]
