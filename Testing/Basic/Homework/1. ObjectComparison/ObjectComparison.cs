@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 
 namespace HomeExercise.Tasks.ObjectComparison;
 public class ObjectComparison
@@ -18,8 +19,7 @@ public class ObjectComparison
         // Перепишите код на использование Fluent Assertions.
         actualTsar.Should()
             .BeEquivalentTo(expectedTsar, o => o
-                .Excluding(t => t.Id)
-                .Excluding(t => t.Parent.Id));
+                .Excluding((IMemberInfo t) => t.Name == nameof(Person.Id)));
     }
 
     [Test]
