@@ -6,27 +6,32 @@ namespace HomeExercise.Tasks.NumberValidator;
 [TestFixture]
 public class NumberValidatorTests
 {
-    [TestCase(17, 2, true, "0.0", true)]
-    [TestCase(17, 2, true, "0", true)]
-    [TestCase(3, 2, true, "00.00", false)]
-    [TestCase(3, 2, true, "-0.00", false)]
-    [TestCase(3, 2, true, "+0.00", false)]
-    [TestCase(4, 2, true, "+1.23", true)]
-    [TestCase(3, 2, true, "+1.23", false)]
-    [TestCase(17, 2, true, "0.000", false)]
-    [TestCase(3, 2, true, "-1.23", false)]
-    [TestCase(3, 2, false, "-1.23", false)]
-    [TestCase(5, 2, false, "-1.23", true)]
-    [TestCase(10, 2, false,null, false)]
-    [TestCase(10, 2, false, "", false)]
-    [TestCase(10, 2, false, "abc", false)]
-    [TestCase(10, 2, false, "1..2", false)]
-    [TestCase(10, 2, false, "1.", false)]
-    [TestCase(10, 2, false, "1.2.3", false)]
-    [TestCase(10, 2, false, "a.sd", false)]
-    public void IsValidNumber_ShouldBeAsExpected(int precision, int scale, bool onlyPositive, string number, bool expectedResult)
+    [TestCase(17, 2, true, "0.0")]
+    [TestCase(17, 2, true, "0")]
+    [TestCase(4, 2, true, "+1.23")]
+    [TestCase(5, 2, false, "-1.23")]
+    public void IsValidNumber_ShouldBeTrue_WhenParametersValid(int precision, int scale, bool onlyPositive, string number)
     {
-        new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(expectedResult);
+        new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(true);
+    }
+    
+    [TestCase(3, 2, true, "00.00")]
+    [TestCase(3, 2, true, "-0.00")]
+    [TestCase(3, 2, true, "+0.00")]
+    [TestCase(3, 2, true, "+1.23")]
+    [TestCase(17, 2, true, "0.000")]
+    [TestCase(3, 2, true, "-1.23")]
+    [TestCase(3, 2, false, "-1.23")]
+    [TestCase(10, 2, false,null)]
+    [TestCase(10, 2, false, "")]
+    [TestCase(10, 2, false, "abc")]
+    [TestCase(10, 2, false, "1..2")]
+    [TestCase(10, 2, false, "1.")]
+    [TestCase(10, 2, false, "1.2.3")]
+    [TestCase(10, 2, false, "a.sd")]
+    public void IsValidNumber_ShouldBeFalse_WhenParametersInvalid(int precision, int scale, bool onlyPositive, string number)
+    {
+        new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(false);
     }
     
     [TestCase(-1, 2, true, typeof(ArgumentException))]
