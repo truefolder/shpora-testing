@@ -23,6 +23,9 @@ public class NumberValidatorTests
     [TestCase(6, 2, false, "123,45", TestName = "IsValidNumber_ShouldBeTrue_WhenCommaFractionWithinPrecisionAndScale")]
     [TestCase(1, 0, false, "5", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionIsOneAndSingleDigit")]
     [TestCase(1, 0, false, "9", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionIsOneAndMaxDigit")]
+    [TestCase(4, 2, false, "123\n", TestName = "IsValidNumber_ShouldBeTrue_When\\nAtEnd")]
+    [TestCase(10, 2, false, "１２３", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseDigitsUsed")]
+    [TestCase(10, 2, false, "１２３.４５", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseDigitsWithDotUsed")]
     public void IsValidNumber_ShouldBeTrue_WhenParametersValid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(true);
@@ -61,6 +64,11 @@ public class NumberValidatorTests
     [TestCase(10, 2, false, "-", TestName = "IsValidNumber_ShouldBeFalse_WhenOnlyMinusUsed")]
     [TestCase(1, 0, false, "10", TestName = "IsValidNumber_ShouldBeFalse_WhenPrecisionIsOneButTwoDigits")]
     [TestCase(5, 0, false, "1.2", TestName = "IsValidNumber_ShouldBeFalse_WhenScaleZeroButFractionUsed")]
+    [TestCase(10, 2, false, "ابج", TestName = "IsValidNumber_ShouldBeFalse_WhenAbjadDigitsUsed")]
+    [TestCase(10, 2, false, "１２３．４５", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseDigitsAndJapaneseDotUsed")]
+    [TestCase(10, 2, true, "123\n.1", TestName = "IsValidNumber_ShouldBeFalse_When\\nBeforeDot")]
+    [TestCase(10, 2, true, "123.\n1", TestName = "IsValidNumber_ShouldBeFalse_When\\nAfterDot")]
+    [TestCase(10, 2, true, "\n123.1", TestName = "IsValidNumber_ShouldBeFalse_When\\nBeforeNumber")]
     public void IsValidNumber_ShouldBeFalse_WhenParametersInvalid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(false);
