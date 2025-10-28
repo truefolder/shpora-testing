@@ -39,19 +39,18 @@ public class NumberValidatorTests
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(false);
     }
     
-    [TestCase(-1, 2, true, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenPrecisionNegative")]
-    [TestCase(1, -1, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenScaleNegative")]
-    [TestCase(1, 1, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenScaleEqualsPrecision")]
-    [TestCase(0, 2, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenPrecisionZero")]
-    [TestCase(2, 5, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenScaleGreaterThanPrecision")]
-    [TestCase(0, -1, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenPrecisionZeroAndScaleNegative")]
-    [TestCase(-5, -5, false, typeof(ArgumentException), TestName = "Constructor_ShouldThrow_WhenBothPrecisionAndScaleNegative")]
-    public void Constructor_ShouldThrowException_WhenPrecisionOrScaleInvalid(int precision, int scale, bool onlyPositive,
-        Type expectedExceptionType)
+    [TestCase(-1, 2, true, TestName = "Constructor_ShouldThrow_WhenPrecisionNegative")]
+    [TestCase(1, -1, false, TestName = "Constructor_ShouldThrow_WhenScaleNegative")]
+    [TestCase(1, 1, false, TestName = "Constructor_ShouldThrow_WhenScaleEqualsPrecision")]
+    [TestCase(0, 2, false, TestName = "Constructor_ShouldThrow_WhenPrecisionZero")]
+    [TestCase(2, 5, false, TestName = "Constructor_ShouldThrow_WhenScaleGreaterThanPrecision")]
+    [TestCase(0, -1, false, TestName = "Constructor_ShouldThrow_WhenPrecisionZeroAndScaleNegative")]
+    [TestCase(-5, -5, false, TestName = "Constructor_ShouldThrow_WhenBothPrecisionAndScaleNegative")]
+    public void Constructor_ShouldThrowException_WhenPrecisionOrScaleInvalid(int precision, int scale, bool onlyPositive)
     {
         var createNumberValidator = () => new NumberValidator(precision, scale, onlyPositive);
         
-        createNumberValidator.Should().Throw<Exception>().Which.Should().BeOfType(expectedExceptionType);
+        createNumberValidator.Should().Throw<ArgumentException>();
     }
     
     [TestCase(1, 0, true, TestName = "Constructor_ShouldNotThrow_WhenMinimalValidPrecisionAndScale")]
