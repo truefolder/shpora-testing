@@ -13,6 +13,16 @@ public class NumberValidatorTests
     [TestCase(3, 1, false, "9.9", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionExactlyMatchesNumberLength")]
     [TestCase(5, 0, false, "-1234", TestName = "IsValidNumber_ShouldBeTrue_WhenIntegerWithinPrecisionWithoutFraction")]
     [TestCase(5, 2, false, "999.99", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionAndScaleAtUpperBound")]
+    [TestCase(20, 5, false, "9223372036854775808", TestName = "IsValidNumber_ShouldBeTrue_WhenNumberExceedsLongMaxValue")]
+    [TestCase(50, 10, false, "12345678901234567890.1234567890", TestName = "IsValidNumber_ShouldBeTrue_WhenVeryLongNumberWithinPrecision")]
+    [TestCase(5, 2, false, "1,23", TestName = "IsValidNumber_ShouldBeTrue_WhenCommaUsedAsDecimalSeparator")]
+    [TestCase(3, 1, true, "+0,5", TestName = "IsValidNumber_ShouldBeTrue_WhenPositiveSignAndCommaUsed")]
+    [TestCase(4, 2, false, "-0,12", TestName = "IsValidNumber_ShouldBeTrue_WhenNegativeWithCommaAndWithinPrecision")]
+    [TestCase(4, 2, false, "1,00", TestName = "IsValidNumber_ShouldBeTrue_WhenFractionContainsZerosAndComma")]
+    [TestCase(3, 1, false, "0,0", TestName = "IsValidNumber_ShouldBeTrue_WhenZeroWithCommaSeparator")]
+    [TestCase(6, 2, false, "123,45", TestName = "IsValidNumber_ShouldBeTrue_WhenCommaFractionWithinPrecisionAndScale")]
+    [TestCase(1, 0, false, "5", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionIsOneAndSingleDigit")]
+    [TestCase(1, 0, false, "9", TestName = "IsValidNumber_ShouldBeTrue_WhenPrecisionIsOneAndMaxDigit")]
     public void IsValidNumber_ShouldBeTrue_WhenParametersValid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(true);
@@ -34,6 +44,23 @@ public class NumberValidatorTests
     [TestCase(5, 2, false, "123456", TestName = "IsValidNumber_ShouldBeFalse_WhenPrecisionExceededByIntegerPart")]
     [TestCase(3, 0, false, "1234", TestName = "IsValidNumber_ShouldBeFalse_WhenIntegerPartLongerThanPrecision")]
     [TestCase(5, 2, false, "000.000", TestName = "IsValidNumber_ShouldBeFalse_WhenTotalDigitsExceedPrecision")]
+    [TestCase(10, 2, false, ".1", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberStartsWithDot")]
+    [TestCase(10, 2, false, ",1", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberStartsWithComma")]
+    [TestCase(10, 2, false, "1,", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberEndsWithComma")]
+    [TestCase(10, 2, false, "1.2a", TestName = "IsValidNumber_ShouldBeFalse_WhenFractionContainsLetter")]
+    [TestCase(10, 2, false, " 1.23", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberStartsWithSpace")]
+    [TestCase(10, 2, false, "1. 23", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberContainsSpaceInside")]
+    [TestCase(10, 2, false, "1_23", TestName = "IsValidNumber_ShouldBeFalse_WhenNumberContainsUnderline")]
+    [TestCase(10, 2, false, "1.2345", TestName = "IsValidNumber_ShouldBeFalse_WhenFractionTooLong")]
+    [TestCase(10, 2, false, "+-1.23", TestName = "IsValidNumber_ShouldBeFalse_WhenDoubleSignUsed")]
+    [TestCase(10, 2, false, "--1.23", TestName = "IsValidNumber_ShouldBeFalse_WhenDoubleMinusSignUsed")]
+    [TestCase(10, 2, false, "++1", TestName = "IsValidNumber_ShouldBeFalse_WhenDoublePlusSignUsed")]
+    [TestCase(10, 2, false, "1..", TestName = "IsValidNumber_ShouldBeFalse_WhenTwoDotsAtEnd")]
+    [TestCase(10, 2, false, ".,1", TestName = "IsValidNumber_ShouldBeFalse_WhenStartsWithDotComma")]
+    [TestCase(10, 2, false, "+", TestName = "IsValidNumber_ShouldBeFalse_WhenOnlySignUsed")]
+    [TestCase(10, 2, false, "-", TestName = "IsValidNumber_ShouldBeFalse_WhenOnlyMinusUsed")]
+    [TestCase(1, 0, false, "10", TestName = "IsValidNumber_ShouldBeFalse_WhenPrecisionIsOneButTwoDigits")]
+    [TestCase(5, 0, false, "1.2", TestName = "IsValidNumber_ShouldBeFalse_WhenScaleZeroButFractionUsed")]
     public void IsValidNumber_ShouldBeFalse_WhenParametersInvalid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(false);
