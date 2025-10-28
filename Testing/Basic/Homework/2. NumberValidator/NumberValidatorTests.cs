@@ -26,6 +26,10 @@ public class NumberValidatorTests
     [TestCase(4, 2, false, "123\n", TestName = "IsValidNumber_ShouldBeTrue_When\\nAtEnd")]
     [TestCase(10, 2, false, "１２３", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseDigitsUsed")]
     [TestCase(10, 2, false, "１２３.４５", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseDigitsWithDotUsed")]
+    [TestCase(10, 2, false, "١٢٣", TestName = "IsValidNumber_ShouldBeTrue_WhenUrduDigitsUsed")]
+    [TestCase(10, 2, false, "१२३", TestName = "IsValidNumber_ShouldBeTrue_WhenDevanagariDigitsUsed")]
+    [TestCase(10, 2, false, "１２3", TestName = "IsValidNumber_ShouldBeTrue_WhenJapaneseAndArabicDigitsMixed")]
+    [TestCase(10, 2, false, "1٢3", TestName = "IsValidNumber_ShouldBeTrue_WhenArabicAndUrduDigitsMixed")]
     public void IsValidNumber_ShouldBeTrue_WhenParametersValid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(true);
@@ -69,6 +73,13 @@ public class NumberValidatorTests
     [TestCase(10, 2, true, "123\n.1", TestName = "IsValidNumber_ShouldBeFalse_When\\nBeforeDot")]
     [TestCase(10, 2, true, "123.\n1", TestName = "IsValidNumber_ShouldBeFalse_When\\nAfterDot")]
     [TestCase(10, 2, true, "\n123.1", TestName = "IsValidNumber_ShouldBeFalse_When\\nBeforeNumber")]
+    [TestCase(10, 2, false, "12345678901234567890.1234567890", TestName = "IsValidNumber_ShouldBeFalse_WhenVeryLongNumberExceedsPrecision")]
+    [TestCase(15, 2, false, "12345678901234567890.1234567890", TestName = "IsValidNumber_ShouldBeFalse_WhenIntegerPartExceedsPrecisionAndScaleValid")]
+    [TestCase(10, 2, false, "四", TestName = "IsValidNumber_ShouldBeFalse_WhenSingleKanjiDigitUsed")]
+    [TestCase(10, 2, false, "四五六", TestName = "IsValidNumber_ShouldBeFalse_WhenKanjiDigitsUsed")]
+    [TestCase(10, 2, false, "一二三", TestName = "IsValidNumber_ShouldBeFalse_WhenChineseDigitsUsed")]
+    [TestCase(10, 2, false, "123六", TestName = "IsValidNumber_ShouldBeFalse_WhenArabicAndKanjiDigitsMixed")]
+    [TestCase(10, 2, false, "1一3", TestName = "IsValidNumber_ShouldBeFalse_WhenLatinAndKanjiDigitsMixed")]
     public void IsValidNumber_ShouldBeFalse_WhenParametersInvalid(int precision, int scale, bool onlyPositive, string number)
     {
         new NumberValidator(precision, scale, onlyPositive).IsValidNumber(number).Should().Be(false);
